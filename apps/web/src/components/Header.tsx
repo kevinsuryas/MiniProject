@@ -73,7 +73,7 @@ export const Header = () => {
                     Log In
                 </li>
             </Link>
-            <Link href="./Teams">
+            <Link href="./Register">
                 <li className="p-4">
                     Sign Up
                 </li>
