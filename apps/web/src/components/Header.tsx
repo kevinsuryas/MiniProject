@@ -68,12 +68,12 @@ export const Header = () => {
                     Create Events
                 </li>
             </Link>
-            <Link href='/#products'>
+            <Link href='/login'>
                 <li className="p-4">
                     Log In
                 </li>
             </Link>
-            <Link href="./Teams">
+            <Link href="./Register">
                 <li className="p-4">
                     Sign Up
                 </li>
