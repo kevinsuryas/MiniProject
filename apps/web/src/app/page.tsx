@@ -1,11 +1,18 @@
 import Image from 'next/image'
 import styles from './page.module.css'
+import Hero from '../components/hero'
 
 
 export default function Home() {
   return (
-    <h1 className='text-2xl text-red-200'>
-      AKU ANAK HILANG
-    </h1>
+    <>
+    <div className='bg-red-100 h-16'>
+      dsds
+    </div>
+    <Hero heading='Event Hub' message='Find your events here'/>
+    <div>
+      halo
+    </div>
+    </>
   )
 }
