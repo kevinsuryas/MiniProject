@@ -68,7 +68,7 @@ export const Header = () => {
                     Create Events
                 </li>
             </Link>
-            <Link href='/#products'>
+            <Link href='./Login'>
                 <li className="p-4">
                     Log In
                 </li>
@@ -112,7 +112,7 @@ export const Header = () => {
                       Gallery
                   </li>
               </Link>
-              <Link href="./Teams">
+              <Link href="./login">
                   <li onClick={handleNav} className="p-4 text-4xl hover:text-gray-500">
                       Teams
                   </li>
