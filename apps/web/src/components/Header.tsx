@@ -57,7 +57,7 @@ export const Header = () => {
             </form>
           </div>
 
-        <ul style={{color: `black`}} className="hidden sm:flex text-2xl">
+        <ul style={{color: `black`}} className="hidden sm:flex text-xl">
             <Link href="./">
                 <li  className="p-4">
                     Find Events
