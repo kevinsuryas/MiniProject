@@ -36,14 +36,14 @@ export const Header = () => {
                   <Image 
                   alt='/'
                   src='https://wp.eventhub.net/wp-content/uploads/2019/11/13.png'
-                  className="w-32"
+                  className="w-[10rem]"
                   width='200'
                   height='200'/>
               </div>
           </Link>
 
-          <div className="hidden sm:flex text-2xl">
-            <form className="w-[750px]">   
+          <div className="sm:flex text-2xl">
+            <form className="sm: w-[20rem] md:w-[40rem]">   
                 <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                 <div className="relative">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -57,7 +57,7 @@ export const Header = () => {
             </form>
           </div>
 
-        <ul style={{color: `black`}} className="hidden sm:flex text-xl">
+        <ul style={{color: `black`}} className="hidden md:flex text-[1vw]">
             <Link href="./">
                 <li  className="p-4">
                     Find Events
