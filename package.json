@@ -35,6 +35,7 @@
     }
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "use-debounce": "^10.0.0"
   }
 }
