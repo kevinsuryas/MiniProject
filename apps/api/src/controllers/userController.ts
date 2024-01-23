@@ -14,14 +14,34 @@ export const register = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { email, username, password, role } = req.body;
+    const { email, username, password, role, referredBy } = req.body;
    
     if (!email || !username || !password || !role)
       throw { message: 'Data Not Complete!' };
 
-      
+   // generate ref code
     const referralCode = generateUniqueReferralCode();
+
+    // password hash
     const hashedPassword: string = await hashPassword(password);
+
+
+    //cek ref code valid
+   
+    // Check if the provided referral code is valid
+   
+    //cek ref code valid
+    let referredById = null;
+    if (referredBy) {
+      const referralOwner = await prisma.users.findUnique({
+        where: { referralCode:referredBy },
+      });
+      referredById = referralOwner ? referralOwner.id : null;
+    }
+    if (referredById === null && referredBy) {
+      throw { message: 'Invalid Referral Code' };
+    }
+
 
     const createUser = await prisma.users.create({
       data: {
@@ -29,6 +49,7 @@ export const register = async (
         username,
         password: hashedPassword,
         referralCode,
+        referredBy: referredById,  // simpen codenya apa id nya
         role: 'USER',
         
       },
