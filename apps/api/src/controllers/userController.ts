@@ -11,30 +11,26 @@ import generateUniqueReferralCode from '@/utils/generateReferalCode';
 export const register = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const { email, username, password, role, referredBy } = req.body;
-   
-    if (!email || !username || !password || !role)
-      throw { message: 'Data Not Complete!' };
 
-   // generate ref code
+    if (!email || !username || !password || !role) {
+      throw { message: 'Data Not Complete!' };
+    }
+
+    // Generate a unique referral code
     const referralCode = generateUniqueReferralCode();
 
-    // password hash
+    // Hash the password
     const hashedPassword: string = await hashPassword(password);
 
-
-    //cek ref code valid
-   
-    // Check if the provided referral code is valid
-   
-    //cek ref code valid
+    // Check if the referral code is valid
     let referredById = null;
     if (referredBy) {
       const referralOwner = await prisma.users.findUnique({
-        where: { referralCode:referredBy },
+        where: { referralCode: referredBy },
       });
       referredById = referralOwner ? referralOwner.id : null;
     }
@@ -42,16 +38,35 @@ export const register = async (
       throw { message: 'Invalid Referral Code' };
     }
 
+    if (referredById) {
+      const expiryDate = new Date();
+      expiryDate.setMonth(expiryDate.getMonth() + 3);
+
+      await prisma.users.update({
+        where: { id: referredById },
+        data: {
+          totalPoints: { increment: 10000 },
+        },
+      });
+
+      await prisma.referralRewards.create({
+        data: {
+          ownerId: referredById,
+          points: 10000,
+          expiresAt: expiryDate,
+          redeemed: false,
+        },
+      });
+    }
 
     const createUser = await prisma.users.create({
       data: {
         email,
         username,
         password: hashedPassword,
-        referralCode,
-        referredBy: referredById,  // simpen codenya apa id nya
+        referralCode: generateUniqueReferralCode(),
+        referredBy: referredById, // Store the code or id
         role: 'USER',
-        
       },
     });
 
@@ -82,7 +97,7 @@ export const register = async (
 export const login = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const { usernameOrEmail, password } = req.body;
@@ -97,7 +112,7 @@ export const login = async (
 
     const isCompare = await hashMatch(password, users.password);
 
-    if (isCompare === false) throw { message: 'Password Doesnt Match' };
+    if (isCompare === false) throw { message: 'Password Doesn\'t Match' };
 
     const token = await jwtCreate({ id: users.id, role: users.role });
 
@@ -117,10 +132,8 @@ export const login = async (
 export const verifiedAccount = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
-
-
   const decodetoken = (req as any).payload;
 
   try {
@@ -133,14 +146,14 @@ export const verifiedAccount = async (
       },
     });
 
-
-
+    console.log("Verified Success");
     res.status(200).send({
       error: false,
       message: 'Verified Success',
       data: null,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    next(error);
   }
 };

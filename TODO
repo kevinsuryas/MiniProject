@@ -2,8 +2,8 @@
 
    vv  Secure user registration and login system.
    vv  Role-based access control for 'Customers' and 'Event Organizers'.
-    Integration of a referral system for user registrations.
-    Mechanisms for referral number generation and tracking.
+   vv Integration of a referral system for user registrations.
+   vv Mechanisms for referral number generation and tracking.
 
 2. Event Management System
 
