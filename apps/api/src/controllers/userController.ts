@@ -7,7 +7,6 @@ import { transporterNodemailer } from '../utils/transportMailer';
 import fs from 'fs';
 import Handlebars from 'handlebars';
 import generateUniqueReferralCode from '@/utils/generateReferalCode';
-
 export const register = async (
   req: Request,
   res: Response,
@@ -26,49 +25,59 @@ export const register = async (
     // Hash the password
     const hashedPassword: string = await hashPassword(password);
 
-    // Check if the referral code is valid
+    // Initialize discountEligible to 0 (not eligible)
+    let discountEligible = 0;
     let referredById = null;
+
+    // Check if the referral code is valid
     if (referredBy) {
       const referralOwner = await prisma.users.findUnique({
         where: { referralCode: referredBy },
       });
       referredById = referralOwner ? referralOwner.id : null;
+
+      if (referredById) {
+        // Set discountEligible to 1 (eligible) as they have a valid referrer
+        discountEligible = 1;
+
+        // Add referral rewards and update referrer's points
+        const expiryDate = new Date();
+        expiryDate.setMonth(expiryDate.getMonth() + 3);
+
+        await prisma.users.update({
+          where: { id: referredById },
+          data: {
+            totalPoints: { increment: 10000 },
+          },
+        });
+
+        await prisma.referralRewards.create({
+          data: {
+            ownerId: referredById,
+            points: 10000,
+            expiresAt: expiryDate,
+            redeemed: false,
+          },
+        });
+      } else if (referredBy) {
+        throw { message: 'Invalid Referral Code' };
+      }
     }
-    if (referredById === null && referredBy) {
-      throw { message: 'Invalid Referral Code' };
-    }
 
-    if (referredById) {
-      const expiryDate = new Date();
-      expiryDate.setMonth(expiryDate.getMonth() + 3);
-
-      await prisma.users.update({
-        where: { id: referredById },
-        data: {
-          totalPoints: { increment: 10000 },
-        },
-      });
-
-      await prisma.referralRewards.create({
-        data: {
-          ownerId: referredById,
-          points: 10000,
-          expiresAt: expiryDate,
-          redeemed: false,
-        },
-      });
-    }
-
+    // Create the new user
     const createUser = await prisma.users.create({
       data: {
         email,
         username,
         password: hashedPassword,
         referralCode: generateUniqueReferralCode(),
-        referredBy: referredById, // Store the code or id
+        referredBy: referredById,
+        discountEligible, // Set the discountEligible flag
         role: 'USER',
       },
     });
+
+    
 
     const token = await jwtCreate({ id: createUser.id, role: createUser.role });
 

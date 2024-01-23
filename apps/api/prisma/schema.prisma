@@ -21,6 +21,7 @@ model Users {
   referredBy   String? 
   totalPoints   Int?  @default(0)
   ReferralRewards ReferralRewards[]
+  discountEligible Int?
   createdAt     DateTime @default(now()) 
   updatedAt     DateTime @default(now()) 
 }
