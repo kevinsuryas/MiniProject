@@ -6,6 +6,7 @@ import { jwtCreate } from '../utils/jwt';
 import { transporterNodemailer } from '../utils/transportMailer';
 import fs from 'fs';
 import Handlebars from 'handlebars';
+import generateUniqueReferralCode from '@/utils/generateReferalCode';
 
 export const register = async (
   req: Request,
@@ -14,10 +15,12 @@ export const register = async (
 ): Promise<void> => {
   try {
     const { email, username, password, role } = req.body;
-
+   
     if (!email || !username || !password || !role)
       throw { message: 'Data Not Complete!' };
 
+      
+    const referralCode = generateUniqueReferralCode();
     const hashedPassword: string = await hashPassword(password);
 
     const createUser = await prisma.users.create({
@@ -25,7 +28,9 @@ export const register = async (
         email,
         username,
         password: hashedPassword,
+        referralCode,
         role: 'USER',
+        
       },
     });
 
