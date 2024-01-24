@@ -11,6 +11,7 @@ import userRouter from './userRouter'
 import evenRouter from './eventRouter'
 import ticketRouter from "./ticketRouter"
 import categoriesRouter from "./categoriesRouter"
+import reviewRouter from "./reviewRouter"
 
 
 
@@ -19,5 +20,6 @@ route.use('/user', userRouter)
 route.use('/event', evenRouter)
 route.use('/ticket', ticketRouter)
 route.use('/categories', categoriesRouter)
+route.use('/review', reviewRouter)
 
 export default route    
