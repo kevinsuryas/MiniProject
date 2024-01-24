@@ -1,17 +1,16 @@
-// import { Router } from "express";
+import { Router } from "express";
 
-// // Define Variable
-// const route = Router();
+// Define Variable
+const route = Router();
 
-// // Import Event Controller
-// import * as EventController from '../controllers/eventController';
+// Import Event Controller
+import * as EventController from '../controllers/eventController';
+import { tokenVerifyOrganizer } from "../middleware/tokenVerifyOrganizer";
+import { UploadValidator } from "../middleware/uploadValidator";
 
-// import { tokenVerify } from "../middleware/tokenVerifyOrganizer";
-// import { UploadValidator } from "../middleware/uploadValidator";
+// Event Routes
+route.post('/creat-eevent', tokenVerifyOrganizer, UploadValidator, EventController.createEvent);
+route.delete('/delete/:eventId', tokenVerifyOrganizer, EventController.deleteEvent);
+route.get('/get', EventController.findEvents);
 
-// // Event Routes
-// route.post('/create-event', tokenVerify, UploadValidator, EventController.createEvent);
-// route.delete('/delete/:eventId', tokenVerify, EventController.deleteEvent);
-// route.get('/get', EventController.findEvents);
-
-// export default route;
+export default route;

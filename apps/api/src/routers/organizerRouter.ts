@@ -5,10 +5,10 @@ const route = Router()
 
 // Import organizer Controller
 import * as organizerController from '../controllers/organizerController';
-import { tokenVerify } from "../middleware/tokenVerifyOrganizer";
+import { tokenVerifyOrganizer } from "../middleware/tokenVerifyOrganizer";
 
 route.post('/register', organizerController.register)
 route.post('/login', organizerController.login)
-route.patch('/verified', tokenVerify, organizerController.verifiedAccount)
+route.patch('/verified', tokenVerifyOrganizer, organizerController.verifiedAccount)
 
 export default route

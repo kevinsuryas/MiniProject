@@ -20,10 +20,14 @@ model Users {
   referralCode  String @unique
   referredBy   String? 
   totalPoints   Int?  @default(0)
-  ReferralRewards ReferralRewards[]
   discountEligible Int?
+  ticket        Tickets []
+  ReferralRewards ReferralRewards[]
+  eventsOrganized   Events[]           @relation("Organizer")
+  reviews       Reviews[]
   createdAt     DateTime @default(now()) 
   updatedAt     DateTime @default(now()) 
+
 }
 model ReferralRewards {
   id            Int      @id @default(autoincrement())
@@ -35,8 +39,73 @@ model ReferralRewards {
   expiresAt     DateTime
 }
 
+model Events {
+  id              String              @id @default(uuid())
+  name            String
+  description     String
+  date            DateTime
+  location        String
+  price           Float
+  availableSeats  Int
+  eventImages     EventImages[]
+  reviews         Reviews[]
+  organizerId     String
+  organizer       Users                @relation("Organizer", fields: [organizerId], references: [id])
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  tickets         Tickets[]
+  categories      CategoryOnEvents[]
+ 
+}
 
- enum Role {
+model EventImages {
+  id        String   @id @default(uuid())
+  url       String
+  eventId   String
+  event     Events    @relation(fields: [eventId], references: [id])
+}
+
+model Categories {
+  id        String           @id @default(uuid())
+  name      String
+  events    CategoryOnEvents[]
+}
+
+model CategoryOnEvents {
+  eventId    String
+  event      Events    @relation(fields: [eventId], references: [id])
+  categoryId String
+  category   Categories @relation(fields: [categoryId], references: [id])
+  
+  @@id([eventId, categoryId])
+}
+
+model Reviews {
+  id        String   @id @default(uuid())
+  userId    String
+  comment   String
+  rating    Int
+  eventId   String
+  event     Events    @relation(fields: [eventId], references: [id])
+  user      Users     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model Tickets {
+  id            String       @id @default(uuid())
+  eventId       String
+  userId        String
+  purchasedAt   DateTime     @default(now())
+  quantity      Int
+  totalPrice    Float
+  event         Events       @relation(fields: [eventId], references: [id])
+  user          Users         @relation(fields: [userId], references: [id])
+
+}
+
+  enum Role {
     USER
     ORGANIZER
     ADMIN

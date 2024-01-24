@@ -3,7 +3,7 @@ import { jwtVerify } from '../utils/jwt';
 
 
 
-export const tokenVerify = async (
+export const tokenVerifyOrganizer = async (
   req: Request,
   res: Response,
   next: NextFunction,
