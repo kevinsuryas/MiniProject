@@ -30,25 +30,23 @@ export default function Page () {
         <>
         <div className="mt-[8rem] flex items-center justify-center">
             <img src='https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20231218085851.png'/>
-        </div>
-
-        <div className="flex justify-center items-center mt-[2rem]">
-            <div className="text-center">
-                <p className="text-2xl font-bold">
-                    Polarisasi Tontonanmu, Suaramu
-                </p>
-                <p>
-                    Wednesday, 20 January 2023
-                </p>
-                <p>
-                    IDR 30.000
-                </p>
-                <p>
-                    Jakarta
-                </p>
-                <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-green-400 mt-10"> Buy Tickets </button>
+        <div className="flex justify-center items-center mt-[2rem] ">
+            <div className="text-center ml-[10rem]">
+                <div className="card w-96 bg-base-100 shadow-xl">
+                    <div className="card-body">
+                        <h2 className="card-title">Polarisasi Tontonanmu, Suaramu</h2>
+                            <p>Wednesday, 20 January 2023</p>
+                            <p>IDR 30.000</p>
+                            <p>Jakarta</p>
+                        <button className="btn btn-primary btn-xs sm:btn-sm md:btn-md lg:btn-lg">Buy Ticket</button>
+                        <div className="card-actions justify-end">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        </div>
+
 
         <div>
             {console.log(data)}
