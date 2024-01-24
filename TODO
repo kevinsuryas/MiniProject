@@ -30,14 +30,14 @@
     vv
 6. Referral and Points System
 
-    Backend logic for the referral system, including point accumulation and expiration.
-    System for redeeming points as discounts on ticket purchases.
-    Tracking and updating point balances and expiry dates.
+    vvBackend logic for the referral system, including point accumulation and expiration.
+   vv System for redeeming points as discounts on ticket purchases.
+   vv Tracking and updating point balances and expiry dates.
 
 7. Event Promotion Management
 
-    Functionality for organizers to create and manage discount vouchers.
-    Implementation of referral code-based discounts for attendees.
+   vv  Functionality for organizers to create and manage discount vouchers.
+   vv  Implementation of referral code-based discounts for attendees.
 
 8. Dashboard for Organizers
 
