@@ -1,6 +1,54 @@
+'use client'
+
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { Field, Form, Formik, ErrorMessage } from 'formik'
+import *as Yup from 'yup'
+
 export default function Register () {
+
+    const registerSchema = Yup.object().shape({
+        username: Yup.string()
+            .min(6, 'Username Must be 6 Characters')
+            .required('Username is Required')
+        , 
+        email: Yup.string()
+            .email('Invalid Email Address')
+            .required('Email is Required')
+        , 
+        password: Yup.string()
+            .min(6, 'Password Must be 6 Characters')
+            .max(12, 'Password Maximum 12 Characters')
+            .required('Password is Required')
+    })
+   
+    const {mutate} = useMutation({
+        mutationFn: async({username, email, password, role}) => {
+            await axios.post('http://localhost:5000/admin', {
+                username, email, password, role
+            })
+        },
+        onSuccess: () => {
+           alert('Success')
+        },
+        onError: (error) => {
+            alert('Error')
+        }
+    })
+    
     return(
+        
         <section class="bg-gray-50 dark:bg-gray-900 py-[7rem]">
+            <Formik
+                initialValues={{username: '', email: '', password: '', role: 'ADMIN'}}
+                validationSchema={registerSchema}
+                onSubmit={async(values) => {
+                    const {username, email, password, role} = values 
+
+                    await mutate({username, email, password, role})
+                }}
+            >
+   
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">        
       </a>
@@ -12,11 +60,37 @@ export default function Register () {
               <form class="space-y-4 md:space-y-6" action="#">
                   <div>
                       <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                      <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="nama123" required=""/>
+                      <Field
+                            name="username"
+                            type="text"
+                        >{({field}) => (
+                            <input {...field} 
+                                placeholder="Type Username" 
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            />
+                        )}
+                        </Field>
+                        <ErrorMessage 
+                            name="username"
+                        />
+                      {/* <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="nama123" required=""/> */}
                   </div>
                   <div>
-                      <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                      <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required=""/>
+                      <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                      <Field
+                            name="email"
+                            type="text"
+                        >{({field}) => (
+                            <input {...field} 
+                                placeholder="name@gmail.com" 
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            />
+                        )}
+                        </Field>
+                        <ErrorMessage 
+                            name="email"
+                        />
+                      {/* <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required=""/> */}
                   </div>
                   <div>
                       <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -42,6 +116,7 @@ export default function Register () {
           </div>
       </div>
   </div>
+  </Formik>
 </section>
 
     )
