@@ -7,6 +7,7 @@ import fs from 'fs';
 import Handlebars from 'handlebars';
 
 
+
 // Purchase Ticket
 
 
@@ -15,11 +16,6 @@ export const purchaseTicket = async (req: Request, res: Response): Promise<void>
     try {
         const { eventId, userId, quantity } = req.body;
         
-        
-     
-
-
-
         // Validate if user exists
         const userExists = await prisma.users.findUnique({ where: { id: userId } });
         if (!userExists) {

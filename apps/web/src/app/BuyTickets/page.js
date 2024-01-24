@@ -1,6 +1,7 @@
 'use client'
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 
 export default function Page () {
 
@@ -26,6 +27,14 @@ export default function Page () {
         fetchData()
     }, [])
 
+    const[number, setNumber] = useState(0)
+    const onDecrement = () => {
+        if(number > 0) setNumber(number-1)
+    }
+    const onIncrement = () => {
+        if(number < 4) setNumber(number+1)
+    }
+
     return(
         <>
         <div className="mt-[8rem] flex items-center justify-center">
@@ -38,6 +47,15 @@ export default function Page () {
                             <p>Wednesday, 20 January 2023</p>
                             <p>IDR 30.000</p>
                             <p>Jakarta</p>
+                            <div className="flex items-center mb-3">
+                                <button onClick={onDecrement}> 
+                                    <CiCircleMinus className="text-[3rem] ml-[4rem] "/>
+                                </button>
+                                <p className="text-3xl"> {number} </p> 
+                                <button onClick={onIncrement}>
+                                    <CiCirclePlus className="text-[3rem] mr-[4rem]"/> 
+                                </button>
+                            </div>
                         <button className="btn btn-primary btn-xs sm:btn-sm md:btn-md lg:btn-lg">Buy Ticket</button>
                         <div className="card-actions justify-end">
                         </div>

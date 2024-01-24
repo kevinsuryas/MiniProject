@@ -7,6 +7,7 @@ import { transporterNodemailer } from '../utils/transportMailer';
 import fs from 'fs';
 import Handlebars from 'handlebars';
 import generateUniqueReferralCode from '@/utils/generateReferalCode';
+
 export const register = async (
   req: Request,
   res: Response,
@@ -15,7 +16,7 @@ export const register = async (
   try {
     const { email, username, password, role, referredBy } = req.body;
 
-    if (!email || !username || !password || !role) {
+    if (!email || !username || !password || !role ) {
       throw { message: 'Data Not Complete!' };
     }
 
