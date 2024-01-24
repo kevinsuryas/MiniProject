@@ -1,24 +1,15 @@
 // TicketController.ts
 import { Request, Response } from 'express';
 import prisma from '../connection';
-
 import { transporterNodemailer } from '../utils/transportMailer';
 import fs from 'fs';
 import Handlebars from 'handlebars';
 
-
 // Purchase Ticket
-
-
-
 export const purchaseTicket = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { eventId, userId, quantity } = req.body;
-        
-        
-     
-
-
+        // Extract request body parameters
+        const { eventId, userId, quantity, usePoints } = req.body;
 
         // Validate if user exists
         const userExists = await prisma.users.findUnique({ where: { id: userId } });
@@ -32,24 +23,39 @@ export const purchaseTicket = async (req: Request, res: Response): Promise<void>
             throw res.status(404).send({ message: 'Event not found' });
         }
 
+        // Check if there are enough tickets available
         if (event.availableSeats < quantity) {
             throw res.status(400).send({ message: 'Not enough tickets available' });
         }
 
         // Calculate total price
-        const totalPrice = event.price * quantity;
+        let totalPrice = event.price * quantity;
+
+
+        if (userExists.discountEligible) {
+            totalPrice *= 0.9; // Apply a 10% discount
+        }
+        if (usePoints) {
+            const userPoints = userExists.totalPoints ?? 0; // Use nullish coalescing operator
+            const pointsToUse = Math.min(userPoints, totalPrice); // Ensure we don't use more points than the totalPrice
+            totalPrice -= pointsToUse; // Apply points as a discount
+        
+            // Update user's points balance
+            await prisma.users.update({
+                where: { id: userId },
+                data: { totalPoints: userPoints - pointsToUse }
+            });
+        }
 
         // Create the ticket(s)
-       const ticket = await prisma.tickets.create({
+        const ticket = await prisma.tickets.create({
             data: {
                 eventId,
                 userId,
                 quantity,
-                totalPrice, 
-              
+                totalPrice,
             }
         });
-
 
         // Update available seats
         await prisma.events.update({
@@ -57,24 +63,25 @@ export const purchaseTicket = async (req: Request, res: Response): Promise<void>
             data: { availableSeats: { decrement: quantity } }
         });
 
-        //send ticket email
+        // Send ticket email
         const template = fs.readFileSync('src/templateTicket.html', 'utf-8');
         let compiledTemplate: any = await Handlebars.compile(template);
-        compiledTemplate = compiledTemplate({ id: ticket.id, username: userExists.username, eventName:event.name, quantity, totalPrice });
-    
+        compiledTemplate = compiledTemplate({ id: ticket.id, username: userExists.username, eventName: event.name, quantity, totalPrice });
+
         await transporterNodemailer.sendMail({
-          from: 'masdefry20@gmail.com',
-          to: userExists.email,
-          subject: 'Welcome!',
-          html: compiledTemplate,
+            from: 'masdefry20@gmail.com',
+            to: userExists.email,
+            subject: 'Welcome!',
+            html: compiledTemplate,
         });
-    
+
         res.status(200).send({ message: 'Tickets purchased successfully', totalPrice: totalPrice });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'An error occurred during ticket purchase' });
     }
 };
+
 // View User Tickets
 export const viewUserTickets = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -86,7 +93,6 @@ export const viewUserTickets = async (req: Request, res: Response): Promise<void
         res.status(500).send({ message: 'Error fetching user tickets' });
     }
 };
-
 
 // Organizer's Event Tickets Summary
 export const eventSummary = async (req: Request, res: Response): Promise<void> => {
@@ -127,5 +133,3 @@ export const eventSummary = async (req: Request, res: Response): Promise<void> =
         res.status(500).send({ message: 'Error fetching event summary' });
     }
 };
-
-
