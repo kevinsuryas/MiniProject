@@ -24,15 +24,17 @@ export default function Register () {
    
     const {mutate} = useMutation({
         mutationFn: async({username, email, password, role, referredBy}) => {
-            await axios.post('http://localhost:8000/register', {
+            await axios.post('http://localhost:8000/user/register', {
                 username, email, password, role, referredBy
-            })
+            }) 
+            console.log(mutationFn)
         },
         onSuccess: () => {
            alert('Success')
         },
         onError: (error) => {
             alert('Error')
+            
         }
     })
     
@@ -40,13 +42,17 @@ export default function Register () {
         
         <section class="bg-gray-50 dark:bg-gray-900 py-[7rem]">
             <Formik
-                initialValues={{username: '', email: '', password: '', role: 'USERS'}}
+                initialValues={{username: '', email: '', password: '', role: 'USER', referredBy: ''}}
                 validationSchema={registerSchema}
                 onSubmit={async(values) => {
-                    const {username, email, password, role} = values 
+                    const {username, email, password, role, referredBy} = values 
 
-                    await mutate({username, email, password, role})
+                    await mutate({username, email, password, role, referredBy})
                 }}
+                // onSubmit={(values, actions) => {
+                //     mutate(values)
+                //     actions.setSubmitting(false)
+                // }}
             >
    
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

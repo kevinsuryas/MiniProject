@@ -16,7 +16,7 @@ export const register = async (
   try {
     const { email, username, password, role, referredBy } = req.body;
 
-    if (!email || !username || !password || !role ) {
+    if (!email || !username || !password ) {
       throw { message: 'Data Not Complete!' };
     }
 
