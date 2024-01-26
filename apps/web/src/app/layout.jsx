@@ -20,7 +20,7 @@ export default function RootLayout({ children, }) {
       <body className={inter.className}>
         <ReduxProvider>
           <TanstackProvider>
-            <Navbar />
+            <Header />
             {children}
             <Footer />
           </TanstackProvider>
