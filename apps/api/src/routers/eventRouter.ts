@@ -9,7 +9,7 @@ import { tokenVerifyOrganizer } from "../middleware/tokenVerifyOrganizer";
 import { UploadValidator } from "../middleware/uploadValidator";
 
 // Event Routes
-route.post('/creat-eevent', tokenVerifyOrganizer, UploadValidator, EventController.createEvent);
+route.post('/create-event', tokenVerifyOrganizer, UploadValidator, EventController.createEvent);
 route.delete('/delete/:eventId', tokenVerifyOrganizer, EventController.deleteEvent);
 route.get('/get', EventController.findEvents);
 

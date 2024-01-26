@@ -13,9 +13,9 @@ export const register = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, username, password, role, referredBy } = req.body;
+    const { email, username, password, referredBy } = req.body;
 
-    if (!email || !username || !password || !role) {
+    if (!email || !username || !password ) {
       throw { message: 'Data Not Complete!' };
     }
 
@@ -131,6 +131,7 @@ export const login = async (
       data: {
         username: users.username,
         token,
+        role:users.role
       },
     });
   } catch (error) {

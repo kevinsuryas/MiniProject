@@ -24,8 +24,8 @@ export default function Register () {
    
     const {mutate} = useMutation({
         mutationFn: async({username, email, password, referredBy}) => {
-            await axios.post('http://localhost:8000/user/register', {
-                username, email, password, referredBy
+            await axios.post('http://localhost:8000/organizer/register', {
+                email, username, password, referredBy
             }) 
         },
         onSuccess: () => {
@@ -46,8 +46,8 @@ export default function Register () {
                 initialValues={{username: '', email: '', password: '', referredBy: ''}}
                 validationSchema={registerSchema}
                 onSubmit={async(values) => {
-                    const {username, email, password, referredBy} = values 
-                    await mutate({username, email, password, referredBy})
+                    const {username, email, password, role, referredBy} = values 
+                    await mutate({username, email, password, role, referredBy})
                 }}
             >
    
@@ -58,7 +58,7 @@ export default function Register () {
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                  Register
+                  Register Organizer
               </h1>
               <div className="space-y-4 md:space-y-6" action="#">
                   <div>

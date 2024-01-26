@@ -14,7 +14,8 @@ export const register = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, username, password, role, referredBy } = req.body;
+    const {username, email, password, referredBy } = req.body;
+    console.log(referredBy)
 
     if (!email || !username || !password ) {
       throw { message: 'Data Not Complete!' };
@@ -36,7 +37,7 @@ export const register = async (
         where: { referralCode: referredBy },
       });
       referredById = referralOwner ? referralOwner.id : null;
-
+      console.log(referredById)
       if (referredById) {
         // Set discountEligible to 1 (eligible) as they have a valid referrer
         discountEligible = 1;
@@ -60,7 +61,7 @@ export const register = async (
             redeemed: false,
           },
         });
-      } else if (referredBy) {
+      } else {
         throw { message: 'Invalid Referral Code' };
       }
     }
@@ -132,6 +133,7 @@ export const login = async (
       data: {
         username: users.username,
         token,
+        role: users.role
       },
     });
   } catch (error) {
