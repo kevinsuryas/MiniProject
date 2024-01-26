@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import Hero from '../components/hero'
-import img1 from '../../../api/public/image/imageUpload-1706172493877-224155337.png'
+// import img1 from '../../../api/public/image/imageUpload-1706172493877-224155337.png'
 
 
 const fetchProducts = async() => {
   try {
-    const res = await fetch('http://localhost:8000/event/create-event', {
+    const res = await fetch('http://localhost:8000/event/get', {
       method: 'GET',
       cache: 'no-store'
     })
@@ -16,10 +16,11 @@ const fetchProducts = async() => {
     return error
   }
 }
+
 export default async function Home() {
 
-  const {data: createImages} = await fetchProducts()
-  console.log(createImages)
+  const {data: events} = await fetchProducts()
+  console.log(events)
 
   return (
     <>
@@ -47,52 +48,35 @@ export default async function Home() {
       <button type="button" className="text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Gaming</button>
     </div>
 
-    {/* {
-      event.map((item,index) =>{
+          <div className='flex justify-center'>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 ">
+    {
+      events?.map((item, index) =>{
         return(
-
-        )
-      })
-    } */}
-    <div className='flex justify-center'>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 ">
-        <div className="card w-64 bg-base-100 shadow-xl">
-          <figure>
-            {/* <Image src={`http://localhost:8000/public/image/${item?.eventImages[0]?.url}`} 
-            width={100} 
-            height={100} 
-            alt="My Image" /> */}
-
-          </figure>
-            <div className="card-body bg-white">
-              <h2 className="card-title">Name</h2>
-              <p>Time</p>
-              <p>Price</p>
-              <p>Location</p>
-              <p>Categories</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary ">Buy Now</button>
+              <div className="card w-64 bg-base-100 shadow-xl">
+                <figure>
+                  <Image src={`http://localhost:8000/public/image/${item?.eventImages[0]?.url}`} 
+                  width={100} 
+                  height={100} 
+                  alt="My Image" 
+                  />
+                </figure>
+                  <div className="card-body bg-white">
+                    <h2 className="card-title">{item.name}</h2>
+                    <p>Time</p>
+                    <p>{item.price}</p>
+                    <p>{item.location}</p>
+                    <p>Categories</p>
+                    <div className="card-actions justify-end">
+                      <button className="btn btn-primary ">Buy Now</button>
+                    </div>
+                  </div>
               </div>
-            </div>
-        </div>
-
-        <div className="card w-64 bg-base-100 shadow-xl">
-          <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
-            <div className="card-body bg-white">
-              <h2 className="card-title">Name</h2>
-              <p>Time</p>
-              <p>Price</p>
-              <p>Location</p>
-              <p>Categories</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary ">Buy Now</button>
-              </div>
-            </div>
-        </div>
+              )
+          })
+      }
       </div>
     </div>
-
-    
     </>
   )
 }
