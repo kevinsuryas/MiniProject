@@ -58,7 +58,7 @@ export const Header = () => {
           </div>
 
         <ul style={{color: `black`}} className="hidden md:flex text-[1vw]">
-            <Link href="./">
+            <Link href="./#findevent">
                 <li  className="p-4">
                     Find Events
                 </li>
